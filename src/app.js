@@ -20,6 +20,7 @@ import router from './router';
 import Toast from 'vue-toastification';
 
 import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
 //Bootstrap and bootswatch
 import 'bootstrap/dist/js/bootstrap.min';
@@ -45,6 +46,8 @@ import Particles from "particles.vue3";
 
 //PDF.js
 
+
+
 //Custom css
 import './styles/app.css';
 
@@ -57,6 +60,8 @@ const toastOptions = {
 configureHTTPInterceptor();
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+
 
 createApp(App)
     .use(Toast, toastOptions)

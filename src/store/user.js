@@ -1,4 +1,5 @@
 import {defineStore, acceptHMRUpdate} from 'pinia';
+import Cookies from 'js-cookie';
 import axios from "axios";
 
 const useUserStore = defineStore('user', {
@@ -6,11 +7,10 @@ const useUserStore = defineStore('user', {
         /** @type {'all' | 'finished' | 'unfinished'} */
         filter: 'all',
         // type will be automatically inferred to number
-        token: '',
         username: '',
         password: '',
         user: {},
-        logged: false,
+        logged: Cookies.get('niwa.session') || false,
     }),
     getters: {
         getToken(){
@@ -38,21 +38,29 @@ const useUserStore = defineStore('user', {
                     'X-Loading': true
                 }
             }).then((response) => {
-                this.user = response.data.userData;
-                this.logged = true;
+                if(response.status === 200){
+                    this.user = response.data.userData;
+                    this.logged = response.data.token;
+                    Cookies.set('niwa.session', response.data.token, {
+                        expires: 5
+                    });
+                }
+
                 return true;
             });
         },
-        populate(tags){
-            this.tags = tags;
+        logout(){
+            Cookies.remove('niwa.session');
+            this.$reset();
         }
     },
 });
 
-// make sure to pass the right store definition, `useAuth` in this case.
-
+// make sure to pass the right store definition, `useUserStore` in this case.
 if (import.meta.hot) {
     import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
 }
+
+
 
 export {useUserStore};

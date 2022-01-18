@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import {useUserStore} from '../store/user';
 import Home from '../components/Home.vue';
 import List from '../components/List';
+import Upload from '../components/upload/Upload';
 
 export const LOGIN_PAGE_NAME = 'login';
 export const HOME_PAGE_NAME = 'Home';
@@ -11,7 +12,19 @@ const routes = [
         path: '/',
         name: 'Home',
         component: List,
-        meta: {requiresAuth: true}
+        meta: {
+            requiresAuth: true,
+            title: 'Books'
+        }
+    },
+    {
+        path: '/upload',
+        name: 'upload',
+        component: Upload,
+        meta: {
+            requiresAuth: true,
+            title: 'Upload'
+        }
     },
     {
         path: '/authenticate',
@@ -46,9 +59,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 
     const user = useUserStore();
-    console.dir(user.isLogged);
 
-    // by defining in by negation (to.meta.requiresAuth !== false) every page wich is not explicitly
+    // by defining in by negation (to.meta.requiresAuth !== false) every page which is not explicitly
     // defining to be without authentication needs to be authentication (security concerns)
     if (to.matched.some((record) => record.meta.requiresAuth !== false)) {
         if (user.isLogged) {

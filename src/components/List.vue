@@ -2,23 +2,16 @@
 
   <div class="">
 
-    <div class="niwa-container d-flex flex-column mt-3 w-75 mx-auto">
+    <div class="d-flex flex-column px-4">
+      <a v-for="f in this.files" :key="f"
+         :href="f.url"
+         class="niwa-file-link">
+        <span class="fas fa-file-pdf pe-2"></span>{{ f.Key }}
+      </a>
+    </div>
 
-      <h1 class="niwa-category-title mx-auto">
-        <strong>Books</strong>
-      </h1>
-
-      <div class="d-flex flex-column px-4">
-        <a v-for="f in this.files" :key="f"
-           :href="f.url"
-           class="niwa-file-link">
-          <span class="fas fa-file-pdf pe-2"></span>{{ f.Key }}
-        </a>
-      </div>
-
-      <div class="d-flex mt-5 mb-3 mx-4 border-top">
-        <div class="flex-fill mx-3 mt-3 border-bottom"></div>
-      </div>
+    <div class="d-flex mt-5 mb-3 mx-4 border-top">
+      <div class="flex-fill mx-3 mt-3 border-bottom"></div>
     </div>
 
   </div>
@@ -126,20 +119,14 @@ export default defineComponent({
 
 <style scoped>
 
-.niwa-container {
-    background-color: #2c3e50;
-    opacity: 0.9;
-    transition-duration: 0.8s;
-    animation: 5s infinite linear pulse;
-}
 @keyframes pulse {
     0% {
         box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.7);
     }
-    25%{
+    25% {
         box-shadow: 0 0 8px 6px rgba(0, 0, 0, 0.7);
     }
-    50%{
+    50% {
         box-shadow: 0 0 8px 12px rgba(0, 0, 0, 0.7);
     }
     75% {
@@ -158,12 +145,13 @@ div.niwa-container:hover {
     color: #a31545;
 }
 
-.niwa-file-link{
+.niwa-file-link {
     font-size: 1.3rem;
     margin-top: 0.6rem;
     text-decoration: none;
 }
-.niwa-file-link:hover{
+
+.niwa-file-link:hover {
     text-shadow: 0 0 9px #c92860;
 }
 

@@ -5,10 +5,9 @@ import path from 'path';
 
 // process.env is now equivalent to import.meta.env
 process.env = {...process.env, ...loadEnv('development', process.cwd())};
-console.dir(process.env);
 
 export default defineConfig({
-    base: '',
+    base: '/',
     build: {
         outDir: 'dist'
     },
@@ -25,7 +24,7 @@ export default defineConfig({
         'process.env': process.env
     },
     plugins: [vue()],
-    mode: 'production',
+    mode: 'dev',
     publicDir: 'assets',
     resolve: {
         alias: {

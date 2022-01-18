@@ -66,9 +66,11 @@ export default defineComponent({
                 this.toast.error('Authentication failed');
                 return;
             }
-            this.toast.success(`Welcome ${this.login}`);
+            //this.toast.success(`Welcome ${this.login}`);
 
-            router.push({name: HOME_PAGE_NAME});
+            router.push({
+                name: 'Home'
+            });
         },
     },
 });
