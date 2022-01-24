@@ -1,9 +1,9 @@
 <template>
 
-  <div class="min-vh-100">
+  <div class="min-vh-100 d-flex flex-column">
     <Header v-if="this.isLogged"/>
     <Spinner/>
-    <div class="niwa-wrapper">
+    <div class="niwa-wrapper flex-fill">
       <Navbar v-if="false"/>
       <NiwaContainer v-if="this.isLogged"></NiwaContainer>
       <router-view v-else></router-view>

@@ -2,13 +2,7 @@
 
   <div class="">
 
-    <div class="d-flex flex-column px-4">
-      <a v-for="f in this.files" :key="f"
-         :href="f.url"
-         class="niwa-file-link">
-        <span class="fas fa-file-pdf pe-2"></span>{{ f.Key }}
-      </a>
-    </div>
+    <Folder></Folder>
 
     <div class="d-flex mt-5 mb-3 mx-4 border-top">
       <div class="flex-fill mx-3 mt-3 border-bottom"></div>
@@ -25,11 +19,12 @@ import Breadcrumb from 'primevue/breadcrumb';
 import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions';
 import * as pdfjs from 'pdfjs-dist';
-
+import Folder from './Folder';
 
 export default defineComponent({
     name: "List",
     components: {
+        Folder,
         Breadcrumb,
         DataView,
         DataViewLayoutOptions

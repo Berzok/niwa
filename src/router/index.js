@@ -9,13 +9,21 @@ export const HOME_PAGE_NAME = 'Home';
 
 const routes = [
     {
-        path: '/',
+        path: '/books',
         name: 'Home',
         component: List,
         meta: {
             requiresAuth: true,
             title: 'Books'
-        }
+        },
+        children: [
+            {
+                path: ':fullpath+',
+                name: 'folder',
+                meta: {requiresAuth: true},
+                component: () => import('./../components/authenticate/Login.vue'),
+            }
+        ]
     },
     {
         path: '/upload',

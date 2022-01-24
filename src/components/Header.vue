@@ -11,7 +11,7 @@
 
     <div class="d-flex flex-fill justify-content-evenly align-items-stretch z-1">
       <div class="">
-        <router-link to="/" class="nav-link h-100 btn-primary">
+        <router-link to="/books" class="nav-link h-100 btn-primary">
           <div class="d-flex flex-column text-center">
             <span class="fas fa-torii-gate"></span>
             Home
@@ -19,14 +19,7 @@
         </router-link>
       </div>
 
-      <div class="">
-        <router-link to="/upload" class="nav-link h-100 btn-primary">
-          <div class="d-flex flex-column text-center">
-            <span class="fas fa-upload"></span>
-            Upload
-          </div>
-        </router-link>
-      </div>
+
 
       <div class="my-auto">
         <button @click="logout" class="btn btn-primary z-1">

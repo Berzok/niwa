@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-fill flex-column">
+  <div class="">
 
     <form id="form_upload" class="d-flex flex-column text-start">
 

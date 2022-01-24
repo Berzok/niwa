@@ -1,12 +1,12 @@
 <template>
 
-  <div class="niwa-container d-flex flex-column my-3 w-75 mx-auto">
+  <div class="niwa-container d-flex flex-column my-3 mx-auto">
 
     <h1 class="niwa-category-title mx-auto">
       <strong>{{ this.$route.meta.title }}</strong>
     </h1>
 
-    <router-view></router-view>
+    <router-view class="mx-5"></router-view>
 
   </div>
 
@@ -32,10 +32,11 @@ export default defineComponent({
 <style scoped>
 
 .niwa-container {
+    animation: 5s infinite linear pulse;
     background-color: #2c3e50;
     opacity: 95%;
     transition-duration: 0.8s;
-    animation: 5s infinite linear pulse;
+    width: 65%;
 }
 
 @keyframes pulse {
