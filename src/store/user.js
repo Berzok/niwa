@@ -9,7 +9,7 @@ const useUserStore = defineStore('user', {
         // type will be automatically inferred to number
         username: '',
         password: '',
-        user: {},
+        user: JSON.parse(Cookies.get('niwa.user')) || {},
         logged: Cookies.get('niwa.session') || false,
     }),
     getters: {
@@ -44,6 +44,9 @@ const useUserStore = defineStore('user', {
                     Cookies.set('niwa.session', response.data.token, {
                         expires: 5
                     });
+                    Cookies.set('niwa.user', JSON.stringify(response.data.userData), {
+                        expires: 5
+                    });
                 }
 
                 return true;
@@ -51,6 +54,7 @@ const useUserStore = defineStore('user', {
         },
         logout(){
             Cookies.remove('niwa.session');
+            Cookies.remove('niwa.user');
             this.$reset();
         }
     },
@@ -60,7 +64,5 @@ const useUserStore = defineStore('user', {
 if (import.meta.hot) {
     import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
 }
-
-
 
 export {useUserStore};

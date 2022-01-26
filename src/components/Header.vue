@@ -10,16 +10,20 @@
     />
 
     <div class="d-flex flex-fill justify-content-evenly align-items-stretch z-1">
-      <div class="">
-        <router-link to="/books" class="nav-link h-100 btn-primary">
-          <div class="d-flex flex-column text-center">
-            <span class="fas fa-torii-gate"></span>
-            Home
-          </div>
-        </router-link>
-      </div>
 
+      <router-link to="/books" class="nav-link h-100 btn-primary">
+        <div class="d-flex flex-column text-center">
+          <span class="fas fa-torii-gate"></span>
+          Home
+        </div>
+      </router-link>
 
+      <router-link v-if="false" to="/structure" class="nav-link h-100 btn-primary">
+        <div class="d-flex flex-column text-center">
+          <span class="fas fa-archive"></span>
+          Structure
+        </div>
+      </router-link>
 
       <div class="my-auto">
         <button @click="logout" class="btn btn-primary z-1">

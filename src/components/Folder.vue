@@ -4,35 +4,52 @@
   <div class="d-flex flex-column px-4">
 
     <Toolbar>
-      <template #start>
-        <Button label="Nouveau dossier" icon="pi pi-plus" class="mr-2" />
-        <Button label="Upload" icon="pi pi-upload" class="p-button-success" />
+      <template v-if="this.user.creation" #start>
+        <Button label="Nouveau dossier" icon="pi pi-plus" class="mr-2"/>
+        <Button label="Upload" icon="pi pi-upload" @click="this.openDialogUpload" class="p-button-success"/>
       </template>
     </Toolbar>
 
-    <hr />
+    <hr/>
 
-    <router-link :to="this.previousPath"
-                 class="btn btn-primary text-start">
+    <button class="btn btn-primary text-start"
+            @click="openFolder(this.folder.parent_folder)">
       <span class="fas fa-folder pe-2"></span>...
-    </router-link>
+    </button>
 
     <hr/>
 
-    <router-link v-for="c in this.childrens" :key="c"
-                 :to="this.$route.path + '/' + c.name"
-                 class="btn btn-primary text-start niwa-file-link"
-                 @click="goToFolder(c.name)">
+    <button v-for="c in this.childrens" :key="c"
+            class="btn btn-primary text-start niwa-file-link"
+            @click="openFolder(c)">
       <span class="fas fa-folder pe-2"></span>{{ c.name }}
-    </router-link>
+    </button>
 
-    <a v-for="f in this.files" :key="f"
-       :href="f.url"
-       target="_blank"
-       class="btn btn-primary niwa-file-link text-start">
-      <span class="fas fa-file-pdf pe-2"></span>{{ f.name }}
-    </a>
+    <div v-for="f in this.files" :key="f" class="d-flex">
+      <a :href="f.url"
+         target="_blank"
+         class="btn btn-primary niwa-file-link text-start flex-fill">
+        <span class="fas fa-file-pdf pe-2"></span>{{ f.name }}
+      </a>
+
+      <button v-if="this.user.deletion"
+              class="btn btn-danger niwa-file-link text-end"
+              @click="this.openDialogDelete(f)">
+        <span class="fas fa-trash"></span>
+      </button>
+
+    </div>
   </div>
+
+  <Dialog header="Upload" v-model:visible="displayUpload" :style="{width: '50vw'}">
+    <Upload :folder="this.folder" @invalidate="this.fetchData"></Upload>
+  </Dialog>
+
+<!--  <Dialog header="Delete" v-model:visible="displayDelete" :style="{width: '50vw'}">-->
+<!--    <Delete :resource="this.resourceToDelete"></Delete>-->
+<!--  </Dialog>-->
+
+  <Delete v-model:visible="displayDelete" :resource="this.resourceToDelete" @invalidate="this.fetchData"></Delete>
 
 </template>
 
@@ -43,8 +60,14 @@ import Breadcrumb from 'primevue/breadcrumb';
 import Button from 'primevue/button';
 import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions';
-import * as pdfjs from 'pdfjs-dist';
+import Dialog from 'primevue/dialog';
 import Toolbar from 'primevue/toolbar';
+import * as pdfjs from 'pdfjs-dist';
+import {mapState, mapWritableState} from "pinia";
+import Upload from './upload/Upload';
+import Delete from './dialog/Delete';
+import {useUserStore} from '../store/user';
+
 
 export default defineComponent({
     name: "Folder",
@@ -53,11 +76,14 @@ export default defineComponent({
         Button,
         DataView,
         DataViewLayoutOptions,
-        Toolbar
+        Dialog,
+        Toolbar,
+        Delete,
+        Upload
     },
     created() {
         this.$watch(
-            () => this.$route.params,
+            () => this.refreshNeeded,
             (toParams, previousParams) => {
                 // react to route changes...
                 this.fetchData();
@@ -65,6 +91,10 @@ export default defineComponent({
         )
     },
     computed: {
+        // gives access to this.counter inside the component
+        // this.counter++
+        // same as reading from store.counter
+        ...mapState(useUserStore, ['user']),
         path() {
             let path = '';
             for (let p of this.$route.params.fullpath ?? []) {
@@ -72,7 +102,7 @@ export default defineComponent({
             }
             return path;
         },
-        previousPath(){
+        previousPath() {
             const previous = this.$route.fullPath.split('/');
             previous.pop();
             return previous.join('/');
@@ -80,32 +110,33 @@ export default defineComponent({
     },
     data() {
         return {
-            folder: null,
+            folder: {
+                id: 1
+            },
             content: [],
             childrens: [],
             files: [],
-            menu: {
-                home: {icon: 'fas fa-torii-gate', to: '/'},
-                items: [
-                    {label: 'Computer'},
-                    {label: 'Notebook'},
-                    {label: 'Accessories'},
-                    {label: 'Backpacks'},
-                    {label: 'Item'}
-                ]
-            }
+            displayUpload: false,
+            displayDelete: false,
+            resourceToDelete: {},
+            userStore: null,
+            refreshNeeded: false
         }
     },
     mounted() {
         pdfjs.GlobalWorkerOptions.workerSrc = "../../node_modules/pdfjs-dist/build/pdf.worker.js";
+        this.userStore = useUserStore();
         this.fetchData();
     },
     methods: {
-        goToFolder($event,) {
-
+        openFolder(folder) {
+            if (folder) {
+                this.folder = folder;
+                this.fetchData();
+            }
         },
         fetchData() {
-            axios.get('/folder' + this.path, {
+            axios.get('/folder/' + this.folder.id, {
                 headers: {
                     'X-Loading': true
                 }
@@ -117,6 +148,13 @@ export default defineComponent({
                     this.childrens = data.children_folder;
                 }
             });
+        },
+        openDialogUpload() {
+            this.displayUpload = true;
+        },
+        openDialogDelete(r){
+            this.resourceToDelete = r;
+            this.displayDelete = true;
         }
     }
 })

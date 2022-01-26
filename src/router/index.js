@@ -3,6 +3,7 @@ import {useUserStore} from '../store/user';
 import Home from '../components/Home.vue';
 import List from '../components/List';
 import Upload from '../components/upload/Upload';
+import Structure from '../components/structure/Structure';
 
 export const LOGIN_PAGE_NAME = 'login';
 export const HOME_PAGE_NAME = 'Home';
@@ -10,6 +11,7 @@ export const HOME_PAGE_NAME = 'Home';
 const routes = [
     {
         path: '/books',
+        alias: '/',
         name: 'Home',
         component: List,
         meta: {
@@ -32,6 +34,16 @@ const routes = [
         meta: {
             requiresAuth: true,
             title: 'Upload'
+        }
+    },
+    {
+        path: '/structure',
+        name: 'structure',
+        component: Structure,
+        meta: {
+            requiresAuth: true,
+            title: 'Structure',
+            enabled: false
         }
     },
     {

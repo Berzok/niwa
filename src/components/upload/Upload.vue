@@ -47,15 +47,16 @@ export default defineComponent({
             source: null
         }
     },
+    props: {
+        folder: null
+    },
     methods: {
         addFile(event) {
-            console.dir(event.files);
             event.files.forEach((value) => {
                 if(!this.files.includes(value)){
                     this.files.push(value);
                 }
             });
-            console.dir(this.files);
         },
         createPreview(file) {
             let src = URL.createObjectURL(file);
@@ -106,9 +107,11 @@ export default defineComponent({
         },
         async upload() {
             let formData = new FormData();
+            formData.append("folder", this.folder.id);
             for(let f of this.files){
                 formData.append("files[]", f, f.name);
             }
+
             // Display the key/value pairs
             await axios.post('/file/upload', formData,
                 {
@@ -119,6 +122,8 @@ export default defineComponent({
                 }).then((response, error) => {
                     if(response.status === 200){
                         this.toast.success('Upload réussi');
+                        this.$emit('invalidate');
+                        this.$emit('update:visible', false);
                     }
             });
             this.resetForm();
